@@ -1,11 +1,12 @@
 # Robot-Test
 Cleaning Robot (Unattended Coding Test)
+
 The code is written in PHP.
 
 ## How to Run ##
 You must to run the script from console.
 ```
-php index.php test1.json output.json
+php index.php input_file.json output_file.json
 ```
 
 <img src="http://moviltracing.com/iot/images/temp/Screenshot_1.png"  width="700"/>
