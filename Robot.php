@@ -39,19 +39,19 @@ Class  Robot {
 	 */
 	public function setData($data){
 		
-		// * Cargo los datos del mapa
+		// Load initial data
 		$this->map = new Map();
 		$this->map->setMap($data['map']);
 		
-		// * Cargo los datos inicio (Posición y orientación)
+		// Load star pos
 		$this->posIni = new Position($data['start']['X'], $data['start']['Y'], $data['start']['facing']);
 		$this->posAct = clone $this->posIni;
 		
-		// * Cargo nivel de batería.
+		// Load Battery Level
 		$this->batteryIni= intval($data['battery']);
 		$this->batteryEnd= $this->batteryIni;
 		
-		// Cargar Comandos Iniciales
+		// Load program
 		$this->startCommands = $data['commands'];
 		
 		return $this;
@@ -70,9 +70,9 @@ Class  Robot {
 		$this->destFile = $file;
 		
 		if ($this->_executeProcess($this->startCommands)==true) {
-			// Terminó satisfactoriamente
+			// Finished OK
 		}else {
-			// Hubo un error y no pudo terminar
+			// Finished with error
 			$exito = false;
 		}
 		
@@ -89,7 +89,6 @@ Class  Robot {
 	 */
 	protected function _executeProcess($commands){
 		
-		// Ejecutar comandos dados
 		foreach ($commands as $value){
 			
 			// Validate Battery
@@ -99,13 +98,12 @@ Class  Robot {
 
 			if ($this->_executeCommand($value)!==true) {
 			
-				// Saber que hacer con el error
+				// Error case
 				if ($value=="A") {
-					//echo "\tAplicar contingencia...".PHP_EOL;
 					$exito2=false;
 					$i = 0;
 					do {
-						echo "\tAplicando comandos de contingencia...".$i.PHP_EOL;
+						echo "\tApply error commands...".$i.PHP_EOL;
 						if ($this->_executeBackStrategy($this->backStrategy[$i])===true) {
 							$exito2 = true;
 							break;
@@ -148,15 +146,15 @@ Class  Robot {
 		$exito = true;
 		$bateria = 0;
 		
-		// Si son TL y TR
-		// ==> cambia orientacíón y bateria
+		// TL y TR
+		// ==> Change orientation
 		if (strtoupper($command)=="TL" || strtoupper($command)=="TR") {
 			$bateria = 1;
 			$this->_changeOrientation($command);
 		}
 		
-		// Si es A
-		// ==> Cambia posición y Cambio estado celda y bateria
+		// A
+		// ==> Change pos - Change battery level, change orientation
 		if (strtoupper($command)=="A" ) {
 			$bateria = 2;
 			
@@ -164,8 +162,8 @@ Class  Robot {
 				$exito = false;
 			}
 		}
-		// Si es B
-		// ==> Cambia posición u cambia estado celda y bateria con restricción
+		// B
+		// ==> Change pos - change cell statte and change battery level
 		if (strtoupper($command)=="B" ) {
 			$bateria = 3;
 			if ($this->_advance($command)==false) {
@@ -173,9 +171,8 @@ Class  Robot {
 			}
 		}
 		
-		// Si es C
-		// ==> Cambia estado celda y bateria 
-		// Validar que bateria > 5
+		// C
+		// ==> Change cell state and battery level
 		if (strtoupper($command)=="C" ) {
 			$bateria = 5;
 			
@@ -190,11 +187,11 @@ Class  Robot {
 		}
 		
 		if ($exito) {
-			// Actualizar Bateria
+			// Update battery level
 			$this->_updateBatteryLevel($bateria);
 		}
 		
-		// Imprimir mensajes
+		// Print Messages
 		$this->_printStepByStep($command);
 		
 		return $exito;
@@ -334,8 +331,6 @@ Class  Robot {
 		$y = $this->posAct->getPos()['Y'];
 		$f = $this->posAct->getPos()['facing'];
 		
-		//echo " --- Actual posicion : X : ".$x." - Y : ".$y." - F : ".$f.PHP_EOL;
-		
 		switch ($f) {
 			case "N":
 				if ($command=="B") {
@@ -374,8 +369,6 @@ Class  Robot {
 				}
 				break;
 		}
-		
-		//echo " --- Nueva posicion : X : ".$x2." - Y : ".$y2." - F : ".$f.PHP_EOL;
 		
 		$newPos = new Position($x2, $y2, $f);
 		
