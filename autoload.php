@@ -12,13 +12,7 @@ Use only for didactical purpose.
 --------------------------------------------------------------
 doc*/
 
-
-//echo __DIR__;
-
 $ficheros = scandir(__DIR__,  SCANDIR_SORT_DESCENDING);
-
-// print_r($ficheros);
-// exit;
 
 foreach ($ficheros as $value) {
 	$value1 = __DIR__ . DIRECTORY_SEPARATOR . $value;
@@ -30,6 +24,5 @@ foreach ($ficheros as $value) {
 		}
 	}
 }
-
 
 ?>
