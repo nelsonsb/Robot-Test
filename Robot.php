@@ -43,7 +43,7 @@ Class  Robot {
 		$this->map = new Map();
 		$this->map->setMap($data['map']);
 		
-		// Load star pos
+		// Load start pos
 		$this->posIni = new Position($data['start']['X'], $data['start']['Y'], $data['start']['facing']);
 		$this->posAct = clone $this->posIni;
 		
